@@ -1,6 +1,9 @@
 package jira
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Issue struct {
 	Key    string      `json:"key"`
@@ -8,15 +11,15 @@ type Issue struct {
 }
 
 type IssueFields struct {
-	Summary     string  `json:"summary"`
-	Description string  `json:"description"`
-	Status      Status  `json:"status"`
-	IssueType   Type    `json:"issuetype"`
-	Priority    *Priority `json:"priority,omitempty"`
-	Assignee    *User   `json:"assignee,omitempty"`
-	Reporter    *User   `json:"reporter,omitempty"`
-	Created     string  `json:"created"`
-	Updated     string  `json:"updated"`
+	Summary     string          `json:"summary"`
+	Description json.RawMessage `json:"description"` // ADF format in API v3
+	Status      Status          `json:"status"`
+	IssueType   Type            `json:"issuetype"`
+	Priority    *Priority       `json:"priority,omitempty"`
+	Assignee    *User           `json:"assignee,omitempty"`
+	Reporter    *User           `json:"reporter,omitempty"`
+	Created     string          `json:"created"`
+	Updated     string          `json:"updated"`
 }
 
 type Status struct {

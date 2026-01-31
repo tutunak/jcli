@@ -68,7 +68,7 @@ func TestHTTPClient_GetIssue(t *testing.T) {
 			Key: "TEST-123",
 			Fields: IssueFields{
 				Summary:     "Test issue",
-				Description: "This is a test",
+				Description: json.RawMessage(`{"type":"doc","content":[]}`),
 				Status:      Status{Name: "In Progress"},
 				IssueType:   Type{Name: "Task"},
 			},
