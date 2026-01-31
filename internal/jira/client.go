@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -33,13 +34,16 @@ func NewClient(baseURL, email, apiToken string) *HTTPClient {
 }
 
 func (c *HTTPClient) doRequest(method, endpoint string, query url.Values) ([]byte, error) {
-	u, err := url.Parse(c.baseURL)
-	if err != nil {
-		return nil, fmt.Errorf("invalid base URL: %w", err)
-	}
-	u.Path = endpoint
+	// Build URL by joining base URL and endpoint, handling trailing slashes
+	baseURL := strings.TrimSuffix(c.baseURL, "/")
+	fullURL := baseURL + endpoint
 	if query != nil {
-		u.RawQuery = query.Encode()
+		fullURL += "?" + query.Encode()
+	}
+
+	u, err := url.Parse(fullURL)
+	if err != nil {
+		return nil, fmt.Errorf("invalid URL: %w", err)
 	}
 
 	req, err := http.NewRequest(method, u.String(), nil)
@@ -70,14 +74,15 @@ func (c *HTTPClient) doRequest(method, endpoint string, query url.Values) ([]byt
 }
 
 func (c *HTTPClient) SearchIssues(project, status string) ([]Issue, error) {
-	jql := fmt.Sprintf("project = %q AND status = %q ORDER BY updated DESC", project, status)
+	// JQL: project keys work without quotes, status with spaces needs quotes
+	jql := fmt.Sprintf(`project = %s AND status = "%s" ORDER BY updated DESC`, project, status)
 
 	query := url.Values{}
 	query.Set("jql", jql)
 	query.Set("fields", "summary,status,issuetype,priority,assignee,reporter,created,updated")
 	query.Set("maxResults", "50")
 
-	body, err := c.doRequest(http.MethodGet, "/rest/api/3/search", query)
+	body, err := c.doRequest(http.MethodGet, "/rest/api/3/search/jql", query)
 	if err != nil {
 		return nil, err
 	}
