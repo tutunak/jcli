@@ -1,0 +1,33 @@
+# Binaries
+jcli
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of go coverage tool
+*.out
+coverage.html
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build output
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db
