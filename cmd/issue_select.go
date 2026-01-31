@@ -10,7 +10,7 @@ import (
 	"github.com/dk/jcli/internal/tui"
 )
 
-func executeTaskSelect(args []string) error {
+func executeIssueSelect(args []string) error {
 	cfg, err := config.Load()
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)

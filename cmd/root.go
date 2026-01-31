@@ -24,8 +24,8 @@ func Execute() error {
 	case "help", "--help", "-h":
 		printUsage()
 		return nil
-	case "task":
-		return executeTask(os.Args[2:])
+	case "issue":
+		return executeIssue(os.Args[2:])
 	case "config":
 		return executeConfig(os.Args[2:])
 	default:
@@ -42,15 +42,15 @@ Usage:
   jcli <command> [subcommand] [flags]
 
 Commands:
-  task      Manage Jira tasks
+  issue     Manage Jira issues
   config    Configure jcli settings
   version   Print version information
   help      Show this help message
 
-Task Commands:
-  jcli task select [issue-id]   Select a task (interactive or by ID)
-  jcli task current             Show current active task
-  jcli task branch              Generate branch name for current task
+Issue Commands:
+  jcli issue select [issue-id]   Select an issue (interactive or by ID)
+  jcli issue current             Show current active issue
+  jcli issue branch              Generate branch name for current issue
 
 Config Commands:
   jcli config project <key>     Set default project
