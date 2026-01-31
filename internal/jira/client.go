@@ -75,7 +75,8 @@ func (c *HTTPClient) doRequest(method, endpoint string, query url.Values) ([]byt
 
 func (c *HTTPClient) SearchIssues(project, status string) ([]Issue, error) {
 	// JQL: project keys work without quotes, status with spaces needs quotes
-	jql := fmt.Sprintf(`project = %s AND status = "%s" ORDER BY updated DESC`, project, status)
+	// assignee = currentUser() filters to only issues assigned to the authenticated user
+	jql := fmt.Sprintf(`project = %s AND status = "%s" AND assignee = currentUser() ORDER BY updated DESC`, project, status)
 
 	query := url.Values{}
 	query.Set("jql", jql)
