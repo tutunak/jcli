@@ -19,31 +19,31 @@ func TestGenerator_Generate(t *testing.T) {
 			name:     "simple summary",
 			issueKey: "PROJ-123",
 			summary:  "Add user authentication",
-			want:     "proj-123-add-user-authentication-847291",
+			want:     "PROJ-123-add-user-authentication-847291",
 		},
 		{
 			name:     "summary with special characters",
 			issueKey: "TEST-456",
 			summary:  "Fix bug: user can't login (urgent!)",
-			want:     "test-456-fix-bug-user-can-t-login-urgent-847291",
+			want:     "TEST-456-fix-bug-user-can-t-login-urgent-847291",
 		},
 		{
 			name:     "summary with numbers",
 			issueKey: "DEV-789",
 			summary:  "Upgrade to v2.0",
-			want:     "dev-789-upgrade-to-v2-0-847291",
+			want:     "DEV-789-upgrade-to-v2-0-847291",
 		},
 		{
 			name:     "summary with extra spaces",
 			issueKey: "TASK-1",
 			summary:  "  Multiple   spaces   here  ",
-			want:     "task-1-multiple-spaces-here-847291",
+			want:     "TASK-1-multiple-spaces-here-847291",
 		},
 		{
 			name:     "empty summary",
 			issueKey: "PROJ-999",
 			summary:  "",
-			want:     "proj-999--847291",
+			want:     "PROJ-999--847291",
 		},
 	}
 
@@ -61,9 +61,9 @@ func TestGenerator_GenerateWithRandomNumber(t *testing.T) {
 	gen := NewGenerator()
 	branch := gen.Generate("TEST-1", "Test")
 
-	// Should start with lowercase issue key
-	if !strings.HasPrefix(branch, "test-1-") {
-		t.Errorf("branch should start with 'test-1-', got %q", branch)
+	// Should start with issue key preserving original case
+	if !strings.HasPrefix(branch, "TEST-1-") {
+		t.Errorf("branch should start with 'TEST-1-', got %q", branch)
 	}
 
 	// Should end with a number

@@ -33,7 +33,7 @@ func NewGeneratorWithRand(randFunc func() int) *Generator {
 func (g *Generator) Generate(issueKey, summary string) string {
 	normalized := normalizeSummary(summary)
 	randomNum := g.randFunc()
-	return strings.ToLower(issueKey) + "-" + normalized + "-" + formatNumber(randomNum)
+	return issueKey + "-" + normalized + "-" + formatNumber(randomNum)
 }
 
 func normalizeSummary(summary string) string {
