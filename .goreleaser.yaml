@@ -43,7 +43,7 @@ changelog:
 
 release:
   github:
-    owner: dk
+    owner: tutunak
     name: jcli
   draft: false
   prerelease: auto
