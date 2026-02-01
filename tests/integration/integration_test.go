@@ -151,7 +151,7 @@ func TestCLIIntegration(t *testing.T) {
 		}
 	})
 
-	// Setup full config for task commands
+	// Setup full config for issue commands
 	configFile := filepath.Join(configDir, "jcli", "config.yaml")
 	cfg := map[string]interface{}{
 		"jira": map[string]string{
@@ -167,47 +167,47 @@ func TestCLIIntegration(t *testing.T) {
 	data, _ := yaml.Marshal(cfg)
 	os.WriteFile(configFile, data, 0600)
 
-	// Test task select with issue ID
-	t.Run("task select by ID", func(t *testing.T) {
-		output, err := runCLI("task", "select", "TEST-123")
+	// Test issue select with issue ID
+	t.Run("issue select by ID", func(t *testing.T) {
+		output, err := runCLI("issue", "select", "TEST-123")
 		if err != nil {
-			t.Fatalf("task select failed: %v\n%s", err, output)
+			t.Fatalf("issue select failed: %v\n%s", err, output)
 		}
 		if !strings.Contains(output, "Selected: TEST-123") {
 			t.Errorf("unexpected output: %s", output)
 		}
 	})
 
-	// Test task current
-	t.Run("task current", func(t *testing.T) {
-		output, err := runCLI("task", "current")
+	// Test issue current
+	t.Run("issue current", func(t *testing.T) {
+		output, err := runCLI("issue", "current")
 		if err != nil {
-			t.Fatalf("task current failed: %v", err)
+			t.Fatalf("issue current failed: %v", err)
 		}
-		if !strings.Contains(output, "Current task: TEST-123") {
+		if !strings.Contains(output, "Current issue: TEST-123") {
 			t.Errorf("unexpected output: %s", output)
 		}
 	})
 
-	// Test task branch
-	t.Run("task branch", func(t *testing.T) {
-		output, err := runCLI("task", "branch")
+	// Test issue branch
+	t.Run("issue branch", func(t *testing.T) {
+		output, err := runCLI("issue", "branch")
 		if err != nil {
-			t.Fatalf("task branch failed: %v", err)
+			t.Fatalf("issue branch failed: %v", err)
 		}
 		output = strings.TrimSpace(output)
-		if !strings.HasPrefix(output, "test-123-") {
-			t.Errorf("branch should start with 'test-123-', got: %s", output)
+		if !strings.HasPrefix(output, "TEST-123-") {
+			t.Errorf("branch should start with 'TEST-123-', got: %s", output)
 		}
 	})
 
-	// Test task help
-	t.Run("task help", func(t *testing.T) {
-		output, err := runCLI("task", "help")
+	// Test issue help
+	t.Run("issue help", func(t *testing.T) {
+		output, err := runCLI("issue", "help")
 		if err != nil {
-			t.Fatalf("task help failed: %v", err)
+			t.Fatalf("issue help failed: %v", err)
 		}
-		if !strings.Contains(output, "jcli task - Manage Jira tasks") {
+		if !strings.Contains(output, "jcli issue - Manage Jira issues") {
 			t.Errorf("unexpected output: %s", output)
 		}
 	})
