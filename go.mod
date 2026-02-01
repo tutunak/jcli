@@ -1,4 +1,4 @@
-module github.com/dk/jcli
+module github.com/tutunak/jcli
 
 go 1.24.12
 
