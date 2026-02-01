@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/charmbracelet/huh"
-	"github.com/dk/jcli/internal/jira"
+	"github.com/tutunak/jcli/internal/jira"
 )
 
 type Selector struct{}

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dk/jcli/internal/config"
-	"github.com/dk/jcli/internal/tui"
+	"github.com/tutunak/jcli/internal/config"
+	"github.com/tutunak/jcli/internal/tui"
 )
 
 func executeConfig(args []string) error {

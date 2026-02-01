@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dk/jcli/cmd"
+	"github.com/tutunak/jcli/cmd"
 )
 
 var version = "dev"

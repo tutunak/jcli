@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dk/jcli/internal/config"
-	"github.com/dk/jcli/internal/jira"
-	"github.com/dk/jcli/internal/state"
-	"github.com/dk/jcli/internal/tui"
+	"github.com/tutunak/jcli/internal/config"
+	"github.com/tutunak/jcli/internal/jira"
+	"github.com/tutunak/jcli/internal/state"
+	"github.com/tutunak/jcli/internal/tui"
 )
 
 func executeIssueSelect(args []string) error {

@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dk/jcli/internal/branch"
-	"github.com/dk/jcli/internal/state"
+	"github.com/tutunak/jcli/internal/branch"
+	"github.com/tutunak/jcli/internal/state"
 )
 
 func executeIssueBranch(args []string) error {

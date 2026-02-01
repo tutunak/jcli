@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dk/jcli/internal/state"
+	"github.com/tutunak/jcli/internal/state"
 )
 
 func executeIssueCurrent(args []string) error {

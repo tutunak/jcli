@@ -3,7 +3,7 @@ package tui
 import (
 	"testing"
 
-	"github.com/dk/jcli/internal/jira"
+	"github.com/tutunak/jcli/internal/jira"
 )
 
 func TestNewSelector(t *testing.T) {
