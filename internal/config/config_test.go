@@ -117,6 +117,39 @@ func TestEnvOverrides(t *testing.T) {
 	}
 }
 
+func TestEnvOverridesWithoutConfigFile(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_CONFIG_HOME", tmpDir)
+
+	// Set env vars without creating a config file
+	t.Setenv("JIRA_URL", "https://env.atlassian.net")
+	t.Setenv("JIRA_EMAIL", "env@example.com")
+	t.Setenv("JIRA_API_TOKEN", "env-token")
+	t.Setenv("JIRA_PROJECT", "ENVPROJ")
+	t.Setenv("JIRA_STATUS", "Done")
+
+	loaded, err := Load()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if loaded.Jira.URL != "https://env.atlassian.net" {
+		t.Errorf("expected env URL override, got %q", loaded.Jira.URL)
+	}
+	if loaded.Jira.Email != "env@example.com" {
+		t.Errorf("expected env email override, got %q", loaded.Jira.Email)
+	}
+	if loaded.Jira.APIToken != "env-token" {
+		t.Errorf("expected env token override, got %q", loaded.Jira.APIToken)
+	}
+	if loaded.Defaults.Project != "ENVPROJ" {
+		t.Errorf("expected env project override, got %q", loaded.Defaults.Project)
+	}
+	if loaded.Defaults.Status != "Done" {
+		t.Errorf("expected env status override, got %q", loaded.Defaults.Status)
+	}
+}
+
 func TestValidate(t *testing.T) {
 	tests := []struct {
 		name    string

@@ -61,6 +61,7 @@ func Load() (*Config, error) {
 
 	data, err := os.ReadFile(path)
 	if os.IsNotExist(err) {
+		cfg.applyEnvOverrides()
 		return cfg, nil
 	}
 	if err != nil {
