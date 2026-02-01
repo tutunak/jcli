@@ -58,7 +58,7 @@ jcli config status "In Progress"
 
 ### Getting a Jira API Token
 
-1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
+1. Go to <https://id.atlassian.com/manage-profile/security/api-tokens>
 2. Click "Create API token"
 3. Give it a name (e.g., "jcli")
 4. Copy the generated token
