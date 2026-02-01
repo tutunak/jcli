@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jcli - Jira without leaving your terminal</title>
+    <meta name="description" content="A minimal CLI tool for Jira workflow management. Select issues, track work, generate branches. Stay in flow.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="/" class="logo">jcli</a>
+            <nav>
+                <a href="https://github.com/tutunak/jcli" class="nav-link">GitHub</a>
+                <a href="https://tutunak.com" class="nav-link nav-home">tutunak.com</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Jira without leaving your terminal.</h1>
+            <p class="tagline">Select issues. Track work. Generate branches. Stay in flow.</p>
+            <div class="install-box">
+                <code id="install-cmd">go install github.com/tutunak/jcli@latest</code>
+                <button class="copy-btn" onclick="copyInstall()" aria-label="Copy install command">
+                    <svg class="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <svg class="icon-check hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem">
+        <div class="container">
+            <p class="problem-text">
+                Every browser tab is a broken promise.<br>
+                Open Jira. Find the ticket. Copy the key.<br>
+                Switch back. Remember what you were doing.
+            </p>
+        </div>
+    </section>
+
+    <!-- Terminal Demo Section -->
+    <section class="demo">
+        <div class="container">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">terminal</span>
+                </div>
+                <div class="terminal-body">
+                    <pre id="terminal-output"></pre>
+                    <span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>SELECT</h3>
+                    <p>Interactive issue selection from your assigned tasks</p>
+                    <code>jcli issue select</code>
+                </div>
+                <div class="feature-card">
+                    <h3>TRACK</h3>
+                    <p>Current issue tracking persists across sessions</p>
+                    <code>jcli issue current</code>
+                </div>
+                <div class="feature-card">
+                    <h3>BRANCH</h3>
+                    <p>Smart branch names from issue key and summary</p>
+                    <code>jcli issue branch</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="installation">
+        <div class="container">
+            <h2>Get Started</h2>
+            <div class="tabs">
+                <button class="tab active" data-tab="go-install">Go Install</button>
+                <button class="tab" data-tab="source">From Source</button>
+            </div>
+            <div class="tab-content active" id="go-install">
+                <pre><code><span class="comment"># Install jcli</span>
+go install github.com/tutunak/jcli@latest
+
+<span class="comment"># Configure your Jira credentials</span>
+jcli config credentials
+
+<span class="comment"># Set your default project</span>
+jcli config project MYPROJ</code></pre>
+            </div>
+            <div class="tab-content" id="source">
+                <pre><code><span class="comment"># Clone the repository</span>
+git clone https://github.com/tutunak/jcli.git
+cd jcli
+
+<span class="comment"># Build and install</span>
+make build
+mv jcli /usr/local/bin/</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="workflow">
+        <div class="container">
+            <h2>Daily Workflow</h2>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <p>Start your day by selecting an issue</p>
+                        <code>jcli issue select</code>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <p>Create a branch for your work</p>
+                        <code>git checkout -b $(jcli issue branch)</code>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <p>Check your current issue anytime</p>
+                        <code>jcli issue current</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/tutunak/jcli" class="footer-link">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+                <span class="footer-divider">|</span>
+                <a href="https://tutunak.com" class="footer-link">tutunak.com</a>
+            </div>
+            <p class="license">MIT License</p>
+        </div>
+    </footer>
+
+    <script src="js/terminal.js"></script>
+</body>
+</html>
