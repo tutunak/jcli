@@ -1,0 +1,419 @@
+:root {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --accent: #58a6ff;
+    --accent-green: #3fb950;
+    --border: #30363d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Hero Section */
+.hero {
+    padding: 120px 0 80px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+}
+
+.tagline {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+.install-box {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    gap: 12px;
+}
+
+.install-box code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.95rem;
+    color: var(--accent-green);
+}
+
+.copy-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.copy-btn:hover {
+    color: var(--text-primary);
+}
+
+.copy-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.copy-btn .hidden {
+    display: none;
+}
+
+.copy-btn.copied .icon-copy {
+    display: none;
+}
+
+.copy-btn.copied .icon-check {
+    display: block;
+    color: var(--accent-green);
+}
+
+/* Problem Section */
+.problem {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.problem-text {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    font-style: italic;
+}
+
+/* Terminal Demo */
+.demo {
+    padding: 40px 0 80px;
+}
+
+.terminal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+.terminal-header {
+    background: var(--bg-tertiary);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.terminal-dot.red { background: #ff5f56; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green { background: #27c93f; }
+
+.terminal-title {
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.terminal-body {
+    padding: 24px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+    min-height: 280px;
+    position: relative;
+}
+
+.terminal-body pre {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 18px;
+    background: var(--text-primary);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.prompt { color: var(--accent-green); }
+.command { color: var(--text-primary); }
+.output { color: var(--text-secondary); }
+.highlight { color: var(--accent); }
+.selected { color: var(--accent-green); }
+
+/* Features Section */
+.features {
+    padding: 80px 0;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+}
+
+.feature-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.feature-card:hover {
+    border-color: var(--accent);
+}
+
+.feature-card h3 {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.feature-card code {
+    display: inline-block;
+    background: var(--bg-primary);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: var(--accent-green);
+}
+
+/* Installation Section */
+.installation {
+    padding: 80px 0;
+    background: var(--bg-secondary);
+}
+
+.installation h2 {
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 1.75rem;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.tab {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.tab:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+}
+
+.tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg-primary);
+}
+
+.tab-content {
+    display: none;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content pre {
+    margin: 0;
+}
+
+.tab-content code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+.tab-content .comment {
+    color: var(--text-secondary);
+}
+
+/* Workflow Section */
+.workflow {
+    padding: 80px 0;
+}
+
+.workflow h2 {
+    text-align: center;
+    margin-bottom: 48px;
+    font-size: 1.75rem;
+}
+
+.workflow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.workflow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.step-number {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content p {
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.step-content code {
+    display: inline-block;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: var(--accent-green);
+}
+
+/* Footer */
+footer {
+    padding: 60px 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+}
+
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.github-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.license {
+    margin-top: 24px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .hero {
+        padding: 80px 0 60px;
+    }
+
+    .install-box {
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .terminal-body {
+        font-size: 0.8rem;
+        padding: 16px;
+        min-height: 240px;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .workflow-step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
