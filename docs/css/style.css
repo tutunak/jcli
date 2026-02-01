@@ -32,9 +32,65 @@ body {
     padding: 0 24px;
 }
 
+/* Header */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(13, 17, 23, 0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+}
+
+.logo {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.logo:hover {
+    color: var(--accent);
+}
+
+.site-header nav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+}
+
+.nav-home {
+    color: var(--accent);
+}
+
+.nav-home:hover {
+    color: var(--accent-green);
+}
+
 /* Hero Section */
 .hero {
-    padding: 120px 0 80px;
+    padding: 140px 0 80px;
     text-align: center;
 }
 
@@ -360,39 +416,58 @@ body {
 
 /* Footer */
 footer {
-    padding: 60px 0;
+    padding: 48px 0;
     text-align: center;
     border-top: 1px solid var(--border);
 }
 
-.github-link {
-    display: inline-flex;
+.footer-links {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: 1rem;
-    padding: 12px 24px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    transition: all 0.2s;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
-.github-link:hover {
-    border-color: var(--accent);
+.footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
     color: var(--accent);
 }
 
+.footer-divider {
+    color: var(--border);
+}
+
 .license {
-    margin-top: 24px;
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 /* Responsive */
 @media (max-width: 600px) {
+    .header-content {
+        height: 52px;
+    }
+
+    .site-header nav {
+        gap: 16px;
+    }
+
+    .nav-link {
+        font-size: 0.85rem;
+    }
+
     .hero {
-        padding: 80px 0 60px;
+        padding: 100px 0 60px;
     }
 
     .install-box {
