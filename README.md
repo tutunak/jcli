@@ -111,7 +111,7 @@ jcli issue current
 ```
 
 Output:
-```
+```text
 Current issue: PROJ-123
 Summary: Implement user authentication
 Selected at: 2024-01-15 10:30:00
@@ -151,27 +151,27 @@ git checkout -b $(jcli issue branch)
 
 ### Root Commands
 
-| Command | Description |
-|---------|-------------|
-| `jcli help` | Show help message |
+| Command        | Description               |
+|----------------|---------------------------|
+| `jcli help`    | Show help message         |
 | `jcli version` | Print version information |
 
 ### Issue Commands
 
-| Command | Description |
-|---------|-------------|
-| `jcli issue select` | Interactive selection from assigned "In Progress" issues |
-| `jcli issue select <KEY>` | Select a specific issue by key |
-| `jcli issue current` | Show currently selected issue |
-| `jcli issue branch` | Generate branch name for current issue |
+| Command                   | Description                                              |
+|---------------------------|----------------------------------------------------------|
+| `jcli issue select`       | Interactive selection from assigned "In Progress" issues |
+| `jcli issue select <KEY>` | Select a specific issue by key                           |
+| `jcli issue current`      | Show currently selected issue                            |
+| `jcli issue branch`       | Generate branch name for current issue                   |
 
 ### Config Commands
 
-| Command | Description |
-|---------|-------------|
-| `jcli config credentials` | Set Jira credentials interactively |
-| `jcli config project <KEY>` | Set default project key |
-| `jcli config status <NAME>` | Set default status filter |
+| Command                     | Description                        |
+|-----------------------------|------------------------------------|
+| `jcli config credentials`   | Set Jira credentials interactively |
+| `jcli config project <KEY>` | Set default project key            |
+| `jcli config status <NAME>` | Set default status filter          |
 
 ## Workflow Example
 
@@ -192,10 +192,10 @@ git checkout -b $(jcli issue branch)
 
 ## File Locations
 
-| File | Location | Purpose |
-|------|----------|---------|
-| Config | `~/.config/jcli/config.yaml` | Jira credentials and defaults |
-| State | `~/.local/state/jcli/state.json` | Current issue tracking |
+| File   | Location                         | Purpose                       |
+|--------|----------------------------------|-------------------------------|
+| Config | `~/.config/jcli/config.yaml`     | Jira credentials and defaults |
+| State  | `~/.local/state/jcli/state.json` | Current issue tracking        |
 
 ## Development
 
