@@ -222,11 +222,11 @@ body {
 
 .cursor {
     display: inline-block;
-    width: 8px;
-    height: 18px;
+    width: 0.6em;
+    height: 1.1em;
     background: var(--text-primary);
     animation: blink 1s step-end infinite;
-    vertical-align: text-bottom;
+    vertical-align: -0.2em;
 }
 
 @keyframes blink {
