@@ -3,7 +3,7 @@ module github.com/tutunak/jcli
 go 1.24.12
 
 require (
-	github.com/charmbracelet/huh v0.8.0
+	github.com/charmbracelet/huh v1.0.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
