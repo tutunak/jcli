@@ -1,0 +1,218 @@
+# jcli — full documentation
+
+> jcli is a command-line tool for Jira workflow management, written in Go. It lets a
+> developer pick the Jira issue they are working on without opening a browser, remembers
+> that issue across shell sessions, and generates a consistent git branch name from the
+> issue key and summary.
+
+Site: https://jcli.tutunak.com/
+Source: https://github.com/tutunak/jcli
+License: MIT
+Language: Go (requires Go 1.21 or later to build)
+Platforms: Linux and macOS, amd64 and arm64
+
+## What problem it solves
+
+Working a Jira ticket normally means leaving the terminal: open Jira in a browser, find the
+ticket, copy the key, switch back, and reconstruct what you were doing. jcli removes that
+round trip. You select an issue once, and the terminal remembers it — so `jcli issue branch`
+can hand you a branch name, and `jcli issue current` can remind you what you picked.
+
+It is deliberately small: three issue commands, three config commands, no CLI framework, no
+daemon, no cache. It talks to the Jira REST API v3 over HTTPS with Basic Auth (email plus API
+token), and writes only to the XDG config and state directories.
+
+## Installation
+
+With Go:
+
+```bash
+go install github.com/tutunak/jcli@latest
+```
+
+From source:
+
+```bash
+git clone https://github.com/tutunak/jcli.git
+cd jcli
+make build
+mv jcli /usr/local/bin/
+```
+
+Prebuilt binaries for linux and darwin (amd64 and arm64) are published on the
+releases page: https://github.com/tutunak/jcli/releases
+
+## Configuration
+
+jcli reads a YAML file at `~/.config/jcli/config.yaml` (or `$XDG_CONFIG_HOME/jcli/config.yaml`
+when `XDG_CONFIG_HOME` is set). The directory is created with mode 0700.
+
+```yaml
+jira:
+  url: https://yourcompany.atlassian.net
+  email: your.email@company.com
+  api_token: your_api_token_here
+
+defaults:
+  project: PROJ
+  status: In Progress
+```
+
+Set it up interactively:
+
+```bash
+jcli config credentials          # prompts for Jira URL, email and API token
+jcli config project MYPROJ       # default project key
+jcli config status "In Progress" # default status filter
+```
+
+A Jira API token is created at
+https://id.atlassian.com/manage-profile/security/api-tokens
+
+### Environment variables
+
+Each of these overrides the corresponding value from the config file at load time. Useful for
+CI, for keeping the token out of a file on disk, or for pointing jcli at a second Jira
+instance for one command.
+
+| Variable         | Overrides          |
+|------------------|--------------------|
+| `JIRA_URL`       | `jira.url`         |
+| `JIRA_EMAIL`     | `jira.email`       |
+| `JIRA_API_TOKEN` | `jira.api_token`   |
+| `JIRA_PROJECT`   | `defaults.project` |
+| `JIRA_STATUS`    | `defaults.status`  |
+
+`XDG_CONFIG_HOME` and `XDG_STATE_HOME` relocate the config and state directories.
+
+### File locations
+
+| File   | Location                         | Purpose                       |
+|--------|----------------------------------|-------------------------------|
+| Config | `~/.config/jcli/config.yaml`     | Jira credentials and defaults |
+| State  | `~/.local/state/jcli/state.json` | Current issue tracking        |
+
+## Commands
+
+### `jcli issue select`
+
+Interactive picker. Queries Jira for issues in the configured project, in the configured
+status, assigned to the authenticated user, most recently updated first. The underlying JQL is:
+
+```
+project = <PROJECT> AND status = "<STATUS>" AND assignee = currentUser() ORDER BY updated DESC
+```
+
+Navigate with the arrow keys, choose with Enter. The selection is written to the state file, so
+it survives closing the terminal.
+
+```
+$ jcli issue select
+? Select an issue
+> PROJ-123: Implement user authentication
+  PROJ-124: Fix login redirect bug
+  PROJ-125: Add password reset flow
+Selected: PROJ-123 - Implement user authentication
+```
+
+If the project or status matches nothing, jcli says so and exits without changing the
+selection. If credentials are missing it points you at `jcli config credentials`.
+
+### `jcli issue select <KEY>`
+
+Select a specific issue directly, skipping the picker. The issue is fetched by key, so it does
+not have to be assigned to you or match the configured status.
+
+```
+$ jcli issue select PROJ-456
+Selected: PROJ-456 - Add rate limiting to the API
+```
+
+### `jcli issue current`
+
+Print the issue currently selected, with the time it was selected.
+
+```
+$ jcli issue current
+Current issue: PROJ-123
+Summary: Implement user authentication
+Selected at: 2024-01-15 10:30:00
+```
+
+With nothing selected it prints `No issue currently selected.` and exits successfully.
+
+### `jcli issue branch`
+
+Print a git branch name for the current issue, and nothing else — so it composes with git:
+
+```bash
+git checkout -b $(jcli issue branch)
+```
+
+```
+$ jcli issue branch
+PROJ-123-implement-user-authentication-847291
+```
+
+The format is `<ISSUE-KEY>-<normalized-summary>-<random>`, where:
+
+- the issue key keeps its original case (so it stays uppercase, and stays greppable);
+- the summary is lowercased, with accented Latin characters folded to ASCII (`é` to `e`, `ñ` to `n`, and so on);
+- every remaining run of non-alphanumeric characters becomes a single hyphen, and leading and trailing hyphens are trimmed;
+- the summary is truncated at 50 characters, backing up to the last hyphen when that avoids cutting a word in half;
+- a random number from 0 to 999999 is appended, so re-running the command never collides with a branch you already made.
+
+With nothing selected it prints a hint and exits non-zero, which keeps
+`git checkout -b $(jcli issue branch)` from creating a garbage branch.
+
+### `jcli config credentials`
+
+Prompt for Jira URL, email and API token, then write them to the config file.
+
+### `jcli config project <KEY>`
+
+Set the default project key used by the interactive picker.
+
+### `jcli config status <NAME>`
+
+Set the default status filter. Defaults to `In Progress`. Quote values containing spaces.
+
+### `jcli version`
+
+Print the version. `--version` and `-v` are accepted too.
+
+### `jcli help`
+
+Print usage. `--help` and `-h` are accepted too. Running `jcli` with no arguments does the same.
+
+## Typical session
+
+```bash
+# One-time setup
+jcli config credentials
+jcli config project MYPROJ
+
+# Daily workflow
+jcli issue select                    # pick an issue to work on
+jcli issue current                   # verify the selection
+git checkout -b $(jcli issue branch) # create the feature branch
+
+# Or select and branch in one go
+jcli issue select MYPROJ-456
+git checkout -b $(jcli issue branch)
+```
+
+## Architecture notes
+
+For anyone reading or contributing to the source:
+
+- `cmd/` — command handlers. `root.go` routes on `os.Args[1]` with a switch; there is no CLI framework.
+- `internal/jira/` — Jira REST API v3 client. `Client` is an interface so tests can use `MockClient`; `HTTPClient` makes the real calls with Basic Auth. Issue descriptions are `json.RawMessage` because Jira v3 returns ADF (Atlassian Document Format), not a string.
+- `internal/config/` — YAML config loading, env overrides and saving.
+- `internal/state/` — JSON state file holding the selected issue.
+- `internal/branch/` — branch name generation and summary normalization.
+- `internal/tui/` — the interactive selector, built on `github.com/charmbracelet/huh`.
+
+Build with `make build`, test with `make test` (race detector and coverage), lint with
+`make lint` (golangci-lint), and run the integration tests — which need real Jira
+credentials — with `make test-integration`.

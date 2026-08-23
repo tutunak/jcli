@@ -1,4 +1,10 @@
-// Terminal typewriter animation
+// Terminal typewriter animation.
+//
+// The transcript is already present in index.html as real text so that crawlers,
+// language models and no-JS visitors can read it. This script only takes over
+// when it can actually animate: it snapshots nothing, wipes the <pre>, and
+// retypes the same content. Visitors who prefer reduced motion keep the static
+// transcript untouched.
 const sequences = [
     { text: '$ ', class: 'prompt', delay: 0 },
     { text: 'jcli issue select', class: 'command', delay: 50 },
@@ -26,10 +32,9 @@ const sequences = [
 const terminalOutput = document.getElementById('terminal-output');
 // The cursor lives inside the <pre> so it trails the typed text instead of
 // dropping to its own line. Characters are always inserted before it.
-const cursor = terminalOutput.querySelector('.cursor');
+const cursor = terminalOutput && terminalOutput.querySelector('.cursor');
 let currentSequence = 0;
 let currentChar = 0;
-let isTyping = false;
 
 function typeWriter() {
     if (currentSequence >= sequences.length) {
@@ -74,28 +79,64 @@ function typeCharacter() {
     }
 }
 
+function startTerminal() {
+    if (!terminalOutput || !cursor) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    terminalOutput.replaceChildren(cursor);
+    setTimeout(typeWriter, 500);
+}
+
 // Copy to clipboard functionality
-function copyInstall() {
-    const cmd = document.getElementById('install-cmd').textContent;
-    navigator.clipboard.writeText(cmd).then(() => {
-        const btn = document.querySelector('.copy-btn');
+function initCopyButton() {
+    const btn = document.querySelector('.copy-btn');
+    const cmd = document.getElementById('install-cmd');
+    if (!btn || !cmd) return;
+
+    btn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(cmd.textContent.trim());
+        } catch {
+            return;
+        }
         btn.classList.add('copied');
         setTimeout(() => btn.classList.remove('copied'), 2000);
     });
 }
 
-// Tab switching
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+// Tab switching, wired to the ARIA tablist in index.html
+function initTabs() {
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    if (tabs.length === 0) return;
 
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
+    function select(tab, focus) {
+        tabs.forEach(t => {
+            const panel = document.getElementById(t.dataset.tab);
+            const isActive = t === tab;
+
+            t.classList.toggle('active', isActive);
+            t.setAttribute('aria-selected', String(isActive));
+            t.tabIndex = isActive ? 0 : -1;
+
+            if (panel) {
+                panel.classList.toggle('active', isActive);
+                panel.hidden = !isActive;
+            }
+        });
+        if (focus) tab.focus();
+    }
+
+    tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => select(tab, false));
+        tab.addEventListener('keydown', e => {
+            const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+            if (step === 0) return;
+            e.preventDefault();
+            select(tabs[(i + step + tabs.length) % tabs.length], true);
+        });
     });
-});
+}
 
-// Start animation when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(typeWriter, 500);
-});
+initCopyButton();
+initTabs();
+startTerminal();

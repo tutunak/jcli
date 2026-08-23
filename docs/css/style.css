@@ -19,6 +19,43 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Accessibility helpers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -120%);
+    z-index: 200;
+    background: var(--accent);
+    color: var(--bg-primary);
+    padding: 10px 20px;
+    border-radius: 0 0 6px 6px;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    transform: translate(-50%, 0);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     background-color: var(--bg-primary);
@@ -244,6 +281,12 @@ body {
     padding: 80px 0;
 }
 
+.features h2 {
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 1.75rem;
+}
+
 .feature-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -367,6 +410,7 @@ body {
 }
 
 .workflow-steps {
+    list-style: none;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -412,6 +456,83 @@ body {
     font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
     font-size: 0.85rem;
     color: var(--accent-green);
+}
+
+/* Command Reference Section */
+.reference {
+    padding: 80px 0;
+    background: var(--bg-secondary);
+}
+
+.reference h2 {
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 1.75rem;
+}
+
+/* Keeps a wide table scrollable instead of stretching the page. */
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-primary);
+}
+
+.ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.ref-table th,
+.ref-table td {
+    text-align: left;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+.ref-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.ref-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ref-table td {
+    color: var(--text-secondary);
+}
+
+.ref-table td:first-child {
+    white-space: nowrap;
+}
+
+.ref-table code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: var(--accent-green);
+}
+
+.reference-note {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.reference-note code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.reference-note a {
+    color: var(--accent);
 }
 
 /* Footer */
@@ -490,5 +611,24 @@ footer {
         flex-direction: column;
         align-items: center;
         text-align: center;
+    }
+}
+
+/* Reduced motion: the terminal keeps its static transcript (see terminal.js). */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .cursor {
+        animation: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
     }
 }
