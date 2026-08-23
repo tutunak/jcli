@@ -162,8 +162,11 @@ The format is `<ISSUE-KEY>-<normalized-summary>-<random>`, where:
 - the summary is truncated at 50 characters, backing up to the last hyphen when that avoids cutting a word in half;
 - a random number from 0 to 999999 is appended, so re-running the command never collides with a branch you already made.
 
-With nothing selected it prints a hint and exits non-zero, which keeps
-`git checkout -b $(jcli issue branch)` from creating a garbage branch.
+With nothing selected it prints `No issue currently selected.` plus a hint on stdout, writes
+`Error: no issue selected` to stderr, and exits 1. Note that the hint goes to stdout, so a bare
+`git checkout -b $(jcli issue branch)` captures that text as the branch name and fails with
+`fatal: Cannot update paths and switch to branch 'No' at the same time.` Check the exit status
+before handing the value to git -- see "Shell aliases" below.
 
 ### `jcli config credentials`
 
@@ -184,6 +187,52 @@ Print the version. `--version` and `-v` are accepted too.
 ### `jcli help`
 
 Print usage. `--help` and `-h` are accepted too. Running `jcli` with no arguments does the same.
+
+## Shell aliases
+
+Add to `~/.bashrc` or `~/.zshrc`. Verified in both bash and zsh.
+
+```bash
+# Branch off the issue currently selected in jcli.
+gcj() {
+  local branch
+  branch=$(jcli issue branch) || {
+    printf '%s\n' "$branch" >&2
+    return 1
+  }
+  git checkout -b "$branch"
+}
+
+# Go back to the branch you already made for the current issue,
+# creating one only if it does not exist yet.
+gsj() {
+  local line key existing
+  line=$(jcli issue current | head -n 1)
+  case $line in
+    "Current issue: "*) key=${line#Current issue: } ;;
+    *) printf '%s\n' "$line" >&2; return 1 ;;
+  esac
+  existing=$(git branch --list "${key}-*" \
+    --format='%(refname:short)' | head -n 1)
+  if [ -n "$existing" ]; then
+    git checkout "$existing"
+  else
+    gcj
+  fi
+}
+
+# Shorthands for the two commands you type most.
+alias jis='jcli issue select'
+alias jic='jcli issue current'
+```
+
+`gcj` creates and switches to a branch for the selected issue. `gsj` returns to a branch already
+created for it, falling back to `gcj` when there is none -- needed because `jcli issue branch`
+appends a fresh random suffix on every call, so `gcj` alone would make a new branch each time.
+
+These are functions rather than aliases because command substitution keeps a command's stdout but
+discards its exit status. With no issue selected, `jcli issue branch` prints its hint on stdout, so
+`alias gcj='git checkout -b $(jcli issue branch)'` would pass that hint to git as a branch name.
 
 ## Typical session
 

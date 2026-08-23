@@ -219,21 +219,21 @@
                         aria-controls="source" aria-selected="false" tabindex="-1" data-tab="source">From Source</button>
             </div>
             <div class="tab-content active" id="go-install" role="tabpanel" aria-labelledby="tab-go-install" tabindex="0">
-                <pre><code><span class="comment"># Install jcli</span>
+                <pre><code data-lang="shell"># Install jcli
 go install github.com/tutunak/jcli@latest
 
-<span class="comment"># Configure your Jira credentials</span>
+# Configure your Jira credentials
 jcli config credentials
 
-<span class="comment"># Set your default project</span>
+# Set your default project
 jcli config project MYPROJ</code></pre>
             </div>
             <div class="tab-content" id="source" role="tabpanel" aria-labelledby="tab-source" tabindex="0" hidden>
-                <pre><code><span class="comment"># Clone the repository</span>
+                <pre><code data-lang="shell"># Clone the repository
 git clone https://github.com/tutunak/jcli.git
 cd jcli
 
-<span class="comment"># Build and install</span>
+# Build and install
 make build
 mv jcli /usr/local/bin/</code></pre>
             </div>
@@ -267,6 +267,59 @@ mv jcli /usr/local/bin/</code></pre>
                     </div>
                 </li>
             </ol>
+        </div>
+    </section>
+
+    <!-- Shell Aliases Section -->
+    <section class="aliases" aria-labelledby="aliases-heading">
+        <div class="container">
+            <h2 id="aliases-heading">Shell Aliases</h2>
+            <p class="section-intro">
+                Drop this in your <code>~/.bashrc</code> or <code>~/.zshrc</code> to branch off the
+                issue you selected, in one word. These are functions rather than aliases on purpose:
+                with no issue selected, <code>jcli issue branch</code> prints its hint on stdout, so a
+                plain <code>alias gcj='git checkout -b $(jcli issue branch)'</code> hands that text
+                straight to git and fails with a confusing error.
+            </p>
+            <div class="snippet">
+                <pre><code data-lang="shell"># Branch off the issue currently selected in jcli.
+gcj() {
+  local branch
+  branch=$(jcli issue branch) || {
+    printf '%s\n' "$branch" >&2
+    return 1
+  }
+  git checkout -b "$branch"
+}
+
+# Go back to the branch you already made for the current issue,
+# creating one only if it does not exist yet.
+gsj() {
+  local line key existing
+  line=$(jcli issue current | head -n 1)
+  case $line in
+    "Current issue: "*) key=${line#Current issue: } ;;
+    *) printf '%s\n' "$line" >&2; return 1 ;;
+  esac
+  existing=$(git branch --list "${key}-*" \
+    --format='%(refname:short)' | head -n 1)
+  if [ -n "$existing" ]; then
+    git checkout "$existing"
+  else
+    gcj
+  fi
+}
+
+# Shorthands for the two commands you type most.
+alias jis='jcli issue select'
+alias jic='jcli issue current'</code></pre>
+            </div>
+            <p class="section-note">
+                Reload with <code>source ~/.zshrc</code>, then <code>jis</code> to pick an issue and
+                <code>gcj</code> to branch. <code>jcli issue branch</code> appends a fresh random
+                suffix on every call, so <code>gcj</code> always makes a <em>new</em> branch &mdash;
+                <code>gsj</code> is the one that returns you to an existing one.
+            </p>
         </div>
     </section>
 
@@ -321,6 +374,7 @@ mv jcli /usr/local/bin/</code></pre>
         </div>
     </footer>
 
+    <script src="js/highlight.js" defer></script>
     <script src="js/terminal.js" defer></script>
 </body>
 </html>

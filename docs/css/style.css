@@ -394,9 +394,15 @@ body {
     line-height: 1.8;
 }
 
-.tab-content .comment {
-    color: var(--text-secondary);
-}
+/* Shell syntax highlighting (docs/js/highlight.js).
+   Colours follow the GitHub dark palette the rest of the page already uses.
+   Without JS these classes never appear and the code renders as plain text. */
+.tok-comment  { color: var(--text-secondary); }
+.tok-string   { color: #a5d6ff; }
+.tok-variable { color: #79c0ff; }
+.tok-keyword  { color: #ff7b72; }
+.tok-builtin  { color: #ffa657; }
+.tok-fn       { color: #d2a8ff; }
 
 /* Workflow Section */
 .workflow {
@@ -458,10 +464,63 @@ body {
     color: var(--accent-green);
 }
 
+/* Shell Aliases Section */
+.aliases {
+    padding: 80px 0;
+    background: var(--bg-secondary);
+}
+
+.aliases h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.75rem;
+}
+
+.section-intro,
+.section-note {
+    max-width: 640px;
+    margin: 0 auto 24px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.section-note {
+    margin: 20px auto 0;
+    font-size: 0.9rem;
+}
+
+.section-intro code,
+.section-note code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.snippet {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 640px;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+.snippet pre {
+    margin: 0;
+}
+
+.snippet code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
 /* Command Reference Section */
 .reference {
     padding: 80px 0;
-    background: var(--bg-secondary);
 }
 
 .reference h2 {
@@ -475,7 +534,7 @@ body {
     overflow-x: auto;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: var(--bg-primary);
+    background: var(--bg-secondary);
 }
 
 .ref-table {

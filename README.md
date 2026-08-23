@@ -159,6 +159,69 @@ Combine with git to create and checkout a new branch:
 git checkout -b $(jcli issue branch)
 ```
 
+## Shell Aliases
+
+Add these to `~/.bashrc` or `~/.zshrc` to branch off the selected issue in one word.
+They work unchanged in bash and zsh.
+
+```bash
+# Branch off the issue currently selected in jcli.
+gcj() {
+  local branch
+  branch=$(jcli issue branch) || {
+    printf '%s\n' "$branch" >&2
+    return 1
+  }
+  git checkout -b "$branch"
+}
+
+# Go back to the branch you already made for the current issue,
+# creating one only if it does not exist yet.
+gsj() {
+  local line key existing
+  line=$(jcli issue current | head -n 1)
+  case $line in
+    "Current issue: "*) key=${line#Current issue: } ;;
+    *) printf '%s\n' "$line" >&2; return 1 ;;
+  esac
+  existing=$(git branch --list "${key}-*" \
+    --format='%(refname:short)' | head -n 1)
+  if [ -n "$existing" ]; then
+    git checkout "$existing"
+  else
+    gcj
+  fi
+}
+
+# Shorthands for the two commands you type most.
+alias jis='jcli issue select'
+alias jic='jcli issue current'
+```
+
+Reload with `source ~/.zshrc`, then:
+
+```bash
+jis          # pick an issue
+gcj          # create and switch to a branch for it
+gsj          # later, hop back to that branch
+```
+
+**Why functions and not a plain alias.** With no issue selected, `jcli issue branch`
+prints its hint on *stdout* and exits 1. Command substitution keeps the stdout but
+discards the exit status, so
+
+```bash
+alias gcj='git checkout -b $(jcli issue branch)'   # don't
+```
+
+hands git the hint text and fails with `fatal: Cannot update paths and switch to
+branch 'No' at the same time.` The functions above check the exit status first and
+forward the real message to stderr.
+
+**Why `gsj` exists.** `jcli issue branch` appends a fresh random suffix on every
+call, so running `gcj` twice for the same issue gives you two branches. `gsj` looks
+for a branch already matching `<ISSUE-KEY>-*` and switches to it instead.
+
 ## Commands Reference
 
 ### Root Commands

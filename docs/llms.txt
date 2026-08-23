@@ -40,6 +40,25 @@ git checkout -b $(jcli issue branch) # branch named after the issue
 jcli issue current                   # check what you picked, any time later
 ```
 
+## Shell aliases
+
+Add to `~/.bashrc` or `~/.zshrc` (works in bash and zsh):
+
+```bash
+gcj() {
+  local branch
+  branch=$(jcli issue branch) || {
+    printf '%s\n' "$branch" >&2
+    return 1
+  }
+  git checkout -b "$branch"
+}
+```
+
+Use a function, not `alias gcj='git checkout -b $(jcli issue branch)'`: with no issue
+selected `jcli issue branch` prints its hint on stdout, and command substitution keeps
+the stdout while discarding the non-zero exit status, so git receives the hint text.
+
 ## Links
 
 - [Project site](https://jcli.tutunak.com/): landing page with the install command and a demo transcript.
