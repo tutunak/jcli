@@ -24,7 +24,9 @@ const sequences = [
 ];
 
 const terminalOutput = document.getElementById('terminal-output');
-const cursor = document.querySelector('.cursor');
+// The cursor lives inside the <pre> so it trails the typed text instead of
+// dropping to its own line. Characters are always inserted before it.
+const cursor = terminalOutput.querySelector('.cursor');
 let currentSequence = 0;
 let currentChar = 0;
 let isTyping = false;
@@ -33,7 +35,7 @@ function typeWriter() {
     if (currentSequence >= sequences.length) {
         // Reset and loop
         setTimeout(() => {
-            terminalOutput.innerHTML = '';
+            terminalOutput.replaceChildren(cursor);
             currentSequence = 0;
             currentChar = 0;
             typeWriter();
@@ -60,7 +62,7 @@ function typeCharacter() {
         const span = document.createElement('span');
         span.className = seq.class || '';
         span.textContent = seq.text[currentChar];
-        terminalOutput.appendChild(span);
+        terminalOutput.insertBefore(span, cursor);
         currentChar++;
 
         const charDelay = seq.delay || 30;
