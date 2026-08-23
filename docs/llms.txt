@@ -1,0 +1,73 @@
+# jcli
+
+> jcli is a command-line tool for Jira workflow management, written in Go. It lets a
+> developer pick the Jira issue they are working on without opening a browser, remembers
+> that issue across shell sessions, and generates a consistent git branch name from the
+> issue key and summary.
+
+jcli is deliberately small: three issue commands, three config commands, no CLI framework.
+It talks to the Jira REST API v3 with Basic Auth (email + API token) and stores nothing
+outside the XDG config and state directories. It is free and MIT licensed.
+
+Install: `go install github.com/tutunak/jcli@latest`
+
+## Commands
+
+- `jcli issue select`: interactive picker over the issues assigned to you in the configured status (default "In Progress").
+- `jcli issue select <KEY>`: select a specific issue directly, e.g. `jcli issue select PROJ-123`.
+- `jcli issue current`: print the currently selected issue key, summary and selection time.
+- `jcli issue branch`: print a git branch name for the current issue, formatted `<ISSUE-KEY>-<normalized-summary>-<random>`.
+- `jcli config credentials`: prompt for Jira URL, email and API token, and save them.
+- `jcli config project <KEY>`: set the default project key.
+- `jcli config status <NAME>`: set the default status filter, e.g. `jcli config status "In Progress"`.
+- `jcli version`: print version information.
+- `jcli help`: print the help message.
+
+## Configuration
+
+- Config file: `~/.config/jcli/config.yaml` (keys: `jira.url`, `jira.email`, `jira.api_token`, `defaults.project`, `defaults.status`).
+- State file: `~/.local/state/jcli/state.json` (tracks the currently selected issue).
+- Environment: `JIRA_API_TOKEN` overrides the token stored in the config file.
+- Jira API tokens are created at <https://id.atlassian.com/manage-profile/security/api-tokens>.
+
+## Typical usage
+
+```bash
+jcli config credentials              # one-time setup
+jcli config project MYPROJ
+jcli issue select                    # pick what you are working on
+git checkout -b $(jcli issue branch) # branch named after the issue
+jcli issue current                   # check what you picked, any time later
+```
+
+## Shell aliases
+
+Add to `~/.bashrc` or `~/.zshrc` (works in bash and zsh):
+
+```bash
+gcj() {
+  local branch
+  branch=$(jcli issue branch) || {
+    printf '%s\n' "$branch" >&2
+    return 1
+  }
+  git checkout -b "$branch"
+}
+```
+
+Use a function, not `alias gcj='git checkout -b $(jcli issue branch)'`: with no issue
+selected `jcli issue branch` prints its hint on stdout, and command substitution keeps
+the stdout while discarding the non-zero exit status, so git receives the hint text.
+
+## Links
+
+- [Project site](https://jcli.tutunak.com/): landing page with the install command and a demo transcript.
+- [Full text for language models](https://jcli.tutunak.com/llms-full.txt): complete documentation in one plain-text file.
+- [Source on GitHub](https://github.com/tutunak/jcli): Go source, issue tracker and releases.
+- [README](https://github.com/tutunak/jcli#readme): full documentation, including configuration and branch-name rules.
+- [Releases](https://github.com/tutunak/jcli/releases): prebuilt binaries for linux and darwin, amd64 and arm64.
+- [License](https://github.com/tutunak/jcli/blob/master/LICENSE): MIT.
+
+## Optional
+
+- [Author](https://tutunak.com): the author's site.
